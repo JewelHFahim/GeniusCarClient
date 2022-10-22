@@ -1,43 +1,81 @@
 import React from "react";
+import { useContext } from "react";
+import { Button, Image } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import { FaUserAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../../context/AuthProvider/AuthProvider";
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
 
 const Header = () => {
+  const { user, logOut } = useContext(AuthContext);
+
+  const handleLogOut = () => {
+    logOut()
+      .then(() => {})
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <div>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="#home">Daily News</Navbar.Brand>
+          <Navbar.Brand>
+            <Link to="/">Daily News</Link>
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="#features">Home</Nav.Link>
-              <Nav.Link href="#pricing">All News</Nav.Link>
-              <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Categories</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">
-                  Another action
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">
-                  Something
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                  Separated link
-                </NavDropdown.Item>
-              </NavDropdown>
+              <Nav.Link>
+                {" "}
+                <Link to="/">Home</Link>{" "}
+              </Nav.Link>
+              <Nav.Link>
+                <Link to="/allnews">All News</Link>
+              </Nav.Link>
             </Nav>
-            <Nav>
-              <Nav.Link href="#deets">More deets</Nav.Link>
-              <Nav.Link eventKey={2} href="#memes">
-                Dank memes
+            <Nav className=" align-items-center">
+              
+              <Link to='/profile'>
+                {user?.photoURL ? (
+                  <Image
+                    style={{ height: "30px" }}
+                    roundedCircle
+                    src={user?.photoURL}
+                  ></Image>
+                ) : (
+                  <FaUserAlt></FaUserAlt>
+                )}
+              </Link>
+
+              <Nav.Link>
+                {user?.uid ? (
+                  <>
+                    <span>{user?.displayName}</span>
+                    <Link>
+                      <Button variant="dark" onClick={handleLogOut}>
+                        Log Out
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login">
+                      <Button variant="dark">Login</Button>
+                    </Link>
+                    <Link to="/register">
+                      <Button variant="dark">Sign In</Button>
+                    </Link>
+                  </>
+                )}
               </Nav.Link>
             </Nav>
             <div className="d-lg-none">
-                <LeftSideBar></LeftSideBar>
+              <LeftSideBar></LeftSideBar>
             </div>
           </Navbar.Collapse>
         </Container>
