@@ -3,12 +3,12 @@ import { useEffect } from "react";
 import ServiceCard from "./ServiceCard";
 
 const Services = () => {
-  const [services, sewtServices] = useState([]);
+  const [services, setServices] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:5000/services")
       .then((res) => res.json())
-      .then((data) => sewtServices(data));
+      .then((data) => setServices(data));
   }, []);
 
   return (

@@ -6,7 +6,7 @@ import { UserContext } from '../../Context/AuthContext';
 import OrderRow from './OrderRow';
 
 const Orders = () => {
-    const {user} = useContext(UserContext);
+    const {user, logOut} = useContext(UserContext);
     const [orders, setOrders] = useState([]);
 
 
@@ -17,17 +17,26 @@ const Orders = () => {
             authorization: `Bearer ${localStorage.getItem('geniusToken')}`
           }
         })
-        .then(res=> res.json())
+        .then(res=> {
+          if(res.status === 401 || res.status === 403){
+           return logOut();
+          }
+           return res.json()
+        })
         .then(data=> setOrders(data))
         .catch(error=>console.error(error))
         }
-    },[user?.email])
+    },[user?.email, logOut])
 
     const handleDelete = (id) =>{
       const proceed = window.confirm(`Are you sure, want to cancel the order?`);
       if(proceed){
         fetch(`http://localhost:5000/orders/${id}`,{
-          method: "DELETE"
+          method: "DELETE",
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('geniusToken')}`
+          }
+          
         })
         .then(res=>res.json())
         .then(data=>{
@@ -44,7 +53,9 @@ const Orders = () => {
       fetch(`http://localhost:5000/orders/${id}`,{
         method: "PATCH",
         headers:{
-          'content-type': 'application/json'
+          'content-type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('geniusToken')}`
+
         },
         body: JSON.stringify({status: 'Approved'})
       })

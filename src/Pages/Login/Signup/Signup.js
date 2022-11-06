@@ -1,7 +1,7 @@
 import { GoogleAuthProvider } from "firebase/auth";
 import React from "react";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import login from "../../../assets/images/login/login.svg";
 import { UserContext } from "../../../Context/AuthContext";
 import google from '../../../assets/icons/google.png';
@@ -10,7 +10,12 @@ import linkedin from '../../../assets/icons/linkedin.png';
 import './Signup.css'
 
 
+
+
 const Signup = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   
   const googleProvider = new GoogleAuthProvider();
 
@@ -33,14 +38,38 @@ const Signup = () => {
     .then(error => console.error(error))
   };
 
-  const handleGoogle = () =>{
+  // const handleGoogle = () =>{
+  //   googleSignin(googleProvider)
+  //   .then(result =>{
+  //     const user = result.user;
+  //     console.log(user);
+  //   })
+  //   .catch(error=>{console.error(error);})
+  // }
+
+  const handleGoogle = () => {
     googleSignin(googleProvider)
-    .then(result =>{
-      const user = result.user;
-      console.log(user);
-    })
-    .catch(error=>{console.error(error);})
-  }
+      .then((result) => {
+        const user = result.user;
+        fetch("http://localhost:5000/jwt", {
+          method: 'POST',
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({email: user?.email}),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            localStorage.setItem("geniusToken", data.token);
+            navigate(from, { replace: true });
+          });
+        console.log(user);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <div>
