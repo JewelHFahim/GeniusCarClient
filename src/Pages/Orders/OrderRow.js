@@ -3,29 +3,27 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 const OrderRow = ({ order, handleDelete, handleUpdate }) => {
-  const {_id, serviceName, price, email, phone, customer, service, status } = order;
+  const { _id, serviceName, price, email, phone, customer, service, status } =
+    order;
   const [orderService, setOrderService] = useState({});
-  
 
   useEffect(() => {
-    
-      fetch(`http://localhost:5000/services/${service}`)
+    fetch(`https://genius-car-server-pied.vercel.app/services/${service}`)
       .then((res) => res.json())
       .then((data) => setOrderService(data));
-    
   }, [service]);
-
-  
 
   // useEffect(()=>{
   //   console.log(orderService);
   // },[orderService])
-  
 
   return (
     <tr>
       <th>
-        <button onClick={()=>handleDelete(_id)} className="btn btn-circle btn-outline">
+        <button
+          onClick={() => handleDelete(_id)}
+          className="btn btn-circle btn-outline"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
@@ -62,8 +60,11 @@ const OrderRow = ({ order, handleDelete, handleUpdate }) => {
       </td>
       <td>Price: {price}</td>
       <th>
-        <button onClick={()=>handleUpdate(_id)} className="btn btn-outline text-success font-bold btn-sm">
-          {status ? status : 'Pending'}
+        <button
+          onClick={() => handleUpdate(_id)}
+          className="btn btn-outline text-success font-bold btn-sm"
+        >
+          {status ? status : "Pending"}
         </button>
       </th>
     </tr>

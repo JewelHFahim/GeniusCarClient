@@ -4,19 +4,16 @@ import { useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import login from "../../../assets/images/login/login.svg";
 import { UserContext } from "../../../Context/AuthContext";
-import google from '../../../assets/icons/google.png';
-import facebook from '../../../assets/icons/facebook.png';
-import linkedin from '../../../assets/icons/linkedin.png';
-import './Signup.css'
-
-
-
+import google from "../../../assets/icons/google.png";
+import facebook from "../../../assets/icons/facebook.png";
+import linkedin from "../../../assets/icons/linkedin.png";
+import "./Signup.css";
 
 const Signup = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
-  
+
   const googleProvider = new GoogleAuthProvider();
 
   const { createUser, googleSignin } = useContext(UserContext);
@@ -30,12 +27,12 @@ const Signup = () => {
     console.log(name, email, password);
 
     createUser(email, password)
-    .then(result =>{
-      const user = result.user;
-      console.log(user);
-      form.reset();
-    })
-    .then(error => console.error(error))
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+        form.reset();
+      })
+      .then((error) => console.error(error));
   };
 
   // const handleGoogle = () =>{
@@ -51,12 +48,12 @@ const Signup = () => {
     googleSignin(googleProvider)
       .then((result) => {
         const user = result.user;
-        fetch("http://localhost:5000/jwt", {
-          method: 'POST',
+        fetch("https://genius-car-server-pied.vercel.app/jwt", {
+          method: "POST",
           headers: {
             "content-type": "application/json",
           },
-          body: JSON.stringify({email: user?.email}),
+          body: JSON.stringify({ email: user?.email }),
         })
           .then((res) => res.json())
           .then((data) => {
@@ -122,15 +119,29 @@ const Signup = () => {
                 </button>
               </div>
               <div className="divider">OR</div>
-
             </form>
             <div className="flex justify-center">
-            <div className="text-center mr-2"><button className="google-logo rounded-full bg-base-300 p-2" onClick={handleGoogle}> <img className="rounded-full" src={google} alt="" /> </button>
-            </div>
-            <div className="text-center mr-2"><button className="google-logo rounded-full bg-base-300 p-2"> <img className="rounded-full" src={facebook} alt="" /> </button>
-            </div>
-            <div className="text-center mr-2"><button className="google-logo rounded-full bg-base-300 p-2"> <img className="rounded-full" src={linkedin} alt="" /> </button>
-            </div>
+              <div className="text-center mr-2">
+                <button
+                  className="google-logo rounded-full bg-base-300 p-2"
+                  onClick={handleGoogle}
+                >
+                  {" "}
+                  <img className="rounded-full" src={google} alt="" />{" "}
+                </button>
+              </div>
+              <div className="text-center mr-2">
+                <button className="google-logo rounded-full bg-base-300 p-2">
+                  {" "}
+                  <img className="rounded-full" src={facebook} alt="" />{" "}
+                </button>
+              </div>
+              <div className="text-center mr-2">
+                <button className="google-logo rounded-full bg-base-300 p-2">
+                  {" "}
+                  <img className="rounded-full" src={linkedin} alt="" />{" "}
+                </button>
+              </div>
             </div>
             <div className="text-center">
               <small>
