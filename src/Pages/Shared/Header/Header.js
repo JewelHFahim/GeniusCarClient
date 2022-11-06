@@ -1,85 +1,74 @@
 import React from "react";
 import { useContext } from "react";
-import { Button, Image } from "react-bootstrap";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import { FaUserAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../../context/AuthProvider/AuthProvider";
-import LeftSideBar from "../LeftSideBar/LeftSideBar";
+import logo from "../../../assets/logo.svg";
+import { UserContext } from "../../../Context/AuthContext";
+import { FaSignOutAlt } from "react-icons/fa";
+
 
 const Header = () => {
-  const { user, logOut } = useContext(AuthContext);
+  const {user, logOut} = useContext(UserContext);
 
-  const handleLogOut = () => {
+  const handleLogOut = () =>{
     logOut()
-      .then(() => {})
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+    .then(()=>{})
+    .catch(err=>console.error(err))
+  }
+
+
+  const menuItems = (
+    <>
+          <li className="font-semibold"><Link to="/">Home</Link></li>
+          {
+            user?.email ? 
+            <li className="font-semibold"><Link to="/orders">Orders</Link></li>
+            :
+            <li className="font-semibold"><Link to="/login">Login</Link></li>
+          }
+    </>
+  );
 
   return (
     <div>
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-        <Container>
-          <Navbar.Brand>
-            <Link to="/">Daily News</Link>
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link>
-                {" "}
-                <Link to="/">Home</Link>{" "}
-              </Nav.Link>
-              <Nav.Link>
-                <Link to="/allnews">All News</Link>
-              </Nav.Link>
-            </Nav>
-            <Nav className=" align-items-center">
-              
-              <Link to='/profile'>
-                {user?.photoURL ? (
-                  <Image
-                    style={{ height: "30px" }}
-                    roundedCircle
-                    src={user?.photoURL}
-                  ></Image>
-                ) : (
-                  <FaUserAlt></FaUserAlt>
-                )}
-              </Link>
-
-              <Nav.Link>
-                {user?.uid ? (
-                  <>
-                    <span>{user?.displayName}</span>
-                    <Link>
-                      <Button variant="dark" onClick={handleLogOut}>
-                        Log Out
-                      </Button>
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/login">
-                      <Button variant="dark">Login</Button>
-                    </Link>
-                    <Link to="/register">
-                      <Button variant="dark">Sign In</Button>
-                    </Link>
-                  </>
-                )}
-              </Nav.Link>
-            </Nav>
-            <div className="d-lg-none">
-              <LeftSideBar></LeftSideBar>
-            </div>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+      <div className="navbar h-20 bg-base-100 pt-12">
+        <div className="navbar-start">
+          <div className="dropdown">
+            <label tabIndex={0} className="btn btn-ghost lg:hidden">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h8m-8 6h16"
+                />
+              </svg>
+            </label>
+            <ul
+              tabIndex={0}
+              className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              {menuItems}
+            </ul>
+          </div>
+          <Link to="/" className="">
+            <img src={logo} alt="" />
+          </Link>
+        </div>
+        <div className="navbar-center hidden lg:flex">
+          <ul className="menu menu-horizontal p-0">{menuItems}</ul>
+        </div>
+        <div className="navbar-end">
+          <button className="btn btn-outline border-[#FF3811] text-[#FF3811]">Appoinment</button>
+          <button onClick={handleLogOut} className="btn btn-outline border-[#FF3811] text-[#FF3811] ml-2"><FaSignOutAlt/></button>
+          
+        </div>
+      </div>
     </div>
   );
 };
