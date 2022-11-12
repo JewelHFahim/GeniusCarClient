@@ -31,7 +31,6 @@ const Login = () => {
 
         // JWT Start
         const currentUser = { email: user.email };
-        console.log(currentUser);
         fetch("https://genius-car-server-pied.vercel.app/jwt", {
           method: "POST",
           headers: {
@@ -41,7 +40,6 @@ const Login = () => {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
             localStorage.setItem("geniusToken", data.token);
             navigate(from, { replace: true });
           });
@@ -67,7 +65,6 @@ const Login = () => {
             localStorage.setItem("geniusToken", data.token);
             navigate(from, { replace: true });
           });
-        console.log(user);
       })
       .catch((error) => {
         console.error(error);

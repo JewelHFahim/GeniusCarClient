@@ -13,9 +13,7 @@ const OrderRow = ({ order, handleDelete, handleUpdate }) => {
       .then((data) => setOrderService(data));
   }, [service]);
 
-  // useEffect(()=>{
-  //   console.log(orderService);
-  // },[orderService])
+
 
   return (
     <tr>

@@ -1,15 +1,29 @@
 import React, { useState } from "react";
+import { useRef } from "react";
 import { useEffect } from "react";
 import ServiceCard from "./ServiceCard";
 
 const Services = () => {
-  const [services, setServices] = useState([]);
+  const [search, setSearch] = useState('');
+  const searchRef = useRef();
 
+
+// https://genius-car-server-pied.vercel.app
+  const [services, setServices] = useState([]);
+  const [isAsc, setIsAsc] = useState(true)
   useEffect(() => {
-    fetch("https://genius-car-server-pied.vercel.app/services")
+    fetch(`http://localhost:5000/services?search=${search}&order=${ isAsc ? 'asc' : 'desc'}`)
       .then((res) => res.json())
       .then((data) => setServices(data));
-  }, []);
+  }, [isAsc, search]);
+
+
+  const handleSearch = () =>{
+    setSearch(searchRef.current.value);
+    console.log(searchRef.current.value);
+  }
+
+
 
   return (
     <div>
@@ -23,6 +37,9 @@ const Services = () => {
               humour, or randomised words which don't look even slightly
               believable.
             </p>
+            <input type="text" ref={searchRef} placeholder="search" className="input input-bordered input-accent input-sm mr-1" />
+            <button onClick={handleSearch} className="btn btn-sm" >Search</button>
+            <button className="btn btn-sm btn-outline ml-4 " onClick={()=>setIsAsc(!isAsc)} >{isAsc ? 'desc' : 'asc'}</button>
           </div>
         </div>
       </div>
